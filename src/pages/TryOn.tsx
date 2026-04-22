@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import AppNavbar from "../components/AppNavbar";
 import { OUTFITS, SAMPLE_MODELS, CATEGORIES } from "../data/outfits";
-import { useVirtualTryOn } from "../hooks/useVirtualTryOn";
+//import { useVirtualTryOn } from "../hooks/useVirtualTryOn";
 import PaymentModal from "../components/PaymentModal";
 import { useAuth } from "../context/useAuth";
 
@@ -24,7 +24,7 @@ function StepDot({ n, current, done }: { n: number; current: number; done: boole
 export default function TryOn() {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
-  const { result, runTryOn } = useVirtualTryOn();
+  
 
   const [step, setStep] = useState<Step>("upload");
   const [userPhoto, setUserPhoto] = useState<string | null>(null);
@@ -35,45 +35,102 @@ export default function TryOn() {
   const [likedOutfits, setLikedOutfits] = useState<Set<number>>(new Set());
   const [showPayment, setShowPayment] = useState(false);
   const { user, profile } = useAuth();
+  const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [stage, setStage] = useState("Starting...");
 
   const stepIndex: Record<Step, number> = { upload: 1, select: 2, processing: 3, result: 4 };
   const STEPS = ["Upload Photo", "Choose Outfit", "AI Processing", "Your Look"];
 
-  const handleFile = useCallback((file: File) => {
+   const handleFile = useCallback((file: File) => {
     if (!file.type.startsWith("image/")) return;
     const reader = new FileReader();
-    reader.onload = e => { setUserPhoto(e.target?.result as string); setStep("select"); };
+    reader.onload = e => {
+      setUserPhoto(e.target?.result as string);
+      setStep("select");
+    };
     reader.readAsDataURL(file);
   }, []);
 
-  const startTryOn = async () => {
-    if (!selectedOutfit || !userPhoto) return;
-    setStep("processing");
-    await runTryOn(userPhoto, selectedOutfit.img);
-    setStep("result");
+  // BACKEND CALL
+  const sendToBackend = async (personBase64: string, garmentUrl: string) => {
+    setStage("Uploading images...");
+    setProgress(20);
+
+    const res = await fetch(personBase64);
+    const blob = await res.blob();
+    const personFile = new File([blob], "person.png", { type: "image/png" });
+
+    const garmentRes = await fetch(garmentUrl);
+    const garmentBlob = await garmentRes.blob();
+    const garmentFile = new File([garmentBlob], "garment.png", { type: "image/png" });
+
+    const formData = new FormData();
+    formData.append("person", personFile);
+    formData.append("garment", garmentFile);
+
+    setStage("Running AI model...");
+    setProgress(60);
+
+    const response = await fetch("http://localhost:5000/tryon", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.output) {
+  console.error("Backend Error:", data);
+  alert("Try-on failed. Check backend.");
+  return null;
+}
+
+return `http://localhost:5000/${data.output}`;
   };
 
-  const reset = () => { setStep("upload"); setUserPhoto(null); setSelectedOutfit(null); };
+  // Start Try-On
+  const startTryOn = async () => {
+    if (!selectedOutfit || !userPhoto) return;
 
+    setStep("processing");
+
+    const output = await sendToBackend(userPhoto, selectedOutfit.img);
+
+    setResultUrl(output);
+    setStep("result");
+  };
+ const reset = () => {
+    setStep("upload");
+    setUserPhoto(null);
+    setSelectedOutfit(null);
+    setResultUrl(null);
+  };
+
+ 
   const downloadResult = () => {
-    if (!result.resultUrl) return;
+    if (!resultUrl) return;
     const a = document.createElement("a");
-    a.href = result.resultUrl;
-    a.download = `tryonx-${selectedOutfit?.name ?? "look"}.jpg`;
+    a.href = resultUrl;
+    a.download = "tryon-result.png";
     a.click();
   };
 
-  const shareResult = async () => {
-    if (!result.resultUrl) return;
-    if (navigator.share) {
-      const blob = await (await fetch(result.resultUrl)).blob();
-      const file = new File([blob], "my-look.jpg", { type: "image/jpeg" });
-      navigator.share({ title: "My TryOnX Look", files: [file] }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
-    }
-  };
+ const shareResult = async () => {
+  if (!resultUrl) return;
+
+  if (navigator.share) {
+    const blob = await (await fetch(resultUrl)).blob();
+    const file = new File([blob], "my-look.jpg", { type: "image/jpeg" });
+
+    navigator.share({
+      title: "My TryOn Look",
+      files: [file],
+    }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(resultUrl);
+    alert("Link copied!");
+  }
+};
 
   const filteredOutfits = OUTFITS.filter(o => {
     const catMatch = filterCat === "All" || o.category === filterCat;
@@ -324,19 +381,19 @@ export default function TryOn() {
               </div>
 
               <h2 className="text-3xl font-black mb-2" style={{ fontFamily: "'Syne',sans-serif" }}>AI is working…</h2>
-              <p className="text-gray-500 text-sm mb-2">{result.stage}</p>
+              <p className="text-gray-500 text-sm mb-2">{stage}</p>
 
               {/* Progress bar */}
               <div className="w-full max-w-xs bg-white/[0.06] rounded-full h-1.5 mb-8 overflow-hidden">
-                <motion.div className="h-full rounded-full" animate={{ width: `${result.progress}%` }} transition={{ duration: 0.3 }}
+                <motion.div className="h-full rounded-full" animate={{ width: `${progress}%` }} transition={{ duration: 0.3 }}
                   style={{ background: "linear-gradient(90deg,#7c3aed,#ec4899)" }} />
               </div>
 
               {/* Stage list */}
               <div className="w-full max-w-xs space-y-2.5">
                 {["Detecting body keypoints…", "Segmenting clothing region…", "Aligning outfit to pose…", "Blending textures…", "Rendering final result…"].map((s, i) => {
-                  const done = result.progress >= (i + 1) * 20;
-                  const active = !done && result.progress >= i * 20;
+                  const done = progress >= (i + 1) * 20;
+                  const active = !done && progress >= i * 20;
                   return (
                     <div key={s} className={`flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${done ? "border-emerald-500/20 bg-emerald-500/[0.06]" : active ? "border-purple-500/30 bg-purple-500/[0.06]" : "border-white/[0.04] bg-transparent"}`}>
                       {done ? <CheckCircle size={15} className="text-emerald-400 flex-shrink-0" />
@@ -395,8 +452,8 @@ export default function TryOn() {
                     <p className="text-xs text-purple-300 font-semibold uppercase tracking-widest">AI Try-On</p>
                   </div>
                   <div className="w-64 rounded-3xl overflow-hidden border-2 border-purple-500/50 shadow-[0_0_48px_rgba(124,58,237,0.3)] relative">
-                    {result.resultUrl && <img src={result.resultUrl} alt="Result" className="w-full aspect-[3/4] object-cover" />}
-                    {!result.resultUrl && selectedOutfit && (
+                    {resultUrl && <img src={resultUrl} alt="Result" className="w-full aspect-[3/4] object-cover" />}
+                    {!resultUrl && selectedOutfit && (
                       <div className="relative aspect-[3/4]">
                         <img src={selectedOutfit.img} alt={selectedOutfit.name} className="w-full h-full object-cover opacity-90" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />

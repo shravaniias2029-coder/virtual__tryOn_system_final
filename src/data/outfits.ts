@@ -1,6 +1,33 @@
 // ─── Central outfit catalog ───────────────────────────────────────────────────
 // All outfit images use Unsplash fashion photos (no API key needed — direct URLs)
+import model_1 from "../assets/models/model_1.png";
+import model_2 from "../assets/models/model_2.png";
+import model_3 from "../assets/models/model_3.png";
+import model_4 from "../assets/models/model_4.png";
 
+import garment_5 from "../assets/outfits/garment_5.png";
+import garment_7 from "../assets/outfits/garment_7.png";
+import garment_8 from "../assets/outfits/garment_8.png";
+import garment_13 from "../assets/outfits/garment_13.png";
+import garment_14 from "../assets/outfits/garment_14.png";
+import garment_15 from "../assets/outfits/garment_15.png";
+import garment_17 from "../assets/outfits/garment_17.png";
+import garment_23 from "../assets/outfits/garment_23.png";
+import garment_24 from "../assets/outfits/garment_24.png";
+import garment_21 from "../assets/outfits/garment_21.png";
+import garment_25 from "../assets/outfits/garment_25.png";
+import garment_26 from "../assets/outfits/garment_26.png";
+import garment_27 from "../assets/outfits/garment_27.png";
+import garment_28 from "../assets/outfits/garment_28.png";
+import garment_29 from "../assets/outfits/garment_29.png";
+import garment_30 from "../assets/outfits/garment_30.png";
+
+export const SAMPLE_MODELS = [
+  { id: 1, img: model_1, label: "Sample 1" },
+  { id: 2, img: model_2, label: "Sample 2" },
+  { id: 3, img: model_3, label: "Sample 3" },
+  { id: 4, img: model_4, label: "Sample 4" },
+];
 export interface Outfit {
   id: number;
   name: string;
@@ -19,35 +46,47 @@ export interface Outfit {
 }
 
 export const OUTFITS: Outfit[] = [
+  // {
+  //   id: 1,
+  //   name: "Floral Midi Sundress",
+  //   brand: "Zara",
+  //   price: "₹2,499",
+  //   category: "Dresses",
+  //   color: "#ec4899",
+  //   colorName: "Rose Pink",
+  //   tags: ["summer", "floral", "casual"],
+  //   rating: 4.8,
+  //   reviews: 312,
+  //   img: "C:\\Users\\shrav\\OneDrive\\Documents\\TryOnX---Virtual-TryOn-System\\src\\assets\\outfits\\garment_14.png",
+  //   liked: false,
+  //   isTrending: true,
+  // },
   {
-    id: 1,
-    name: "Floral Midi Sundress",
-    brand: "Zara",
-    price: "₹2,499",
-    category: "Dresses",
-    color: "#ec4899",
-    colorName: "Rose Pink",
-    tags: ["summer", "floral", "casual"],
-    rating: 4.8,
-    reviews: 312,
-    img: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400&q=80",
-    liked: false,
-    isTrending: true,
-  },
-  {
+  id: 1,
+  name: "Casual T-Shirt",
+  brand: "Local Brand",
+  price: "₹799",
+  category: "Tops",
+  color: "#000000",
+  colorName: "Black",
+  tags: ["tshirt", "casual"],
+  rating: 4.5,
+  reviews: 120,
+  img: garment_26,   // ✅ correct
+},
+
+{
     id: 2,
-    name: "Linen Co-ord Set",
-    brand: "H&M",
-    price: "₹1,899",
-    category: "Casual",
-    color: "#f5f0e8",
-    colorName: "Ivory",
-    tags: ["minimal", "summer", "linen"],
+    name: "Wester Top",
+    brand: "Adidas",
+    price: "₹899",
+    category: "Tops",
+    color: "#fff",
+    colorName: "Maron red",
+    tags: ["tshirt"],
     rating: 4.6,
-    reviews: 189,
-    img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80",
-    liked: true,
-    isNew: true,
+    reviews: 90,
+    img: garment_15,
   },
   {
     id: 3,
@@ -60,7 +99,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["evening", "luxury", "formal"],
     rating: 4.9,
     reviews: 97,
-    img: "https://images.unsplash.com/photo-1566479179817-c0b32a3c8b7c?w=400&q=80",
+    img: garment_17 ,
     liked: false,
     isTrending: true,
   },
@@ -75,7 +114,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["street", "casual", "oversized"],
     rating: 4.7,
     reviews: 445,
-    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&q=80",
+    img: garment_8,
     liked: false,
   },
   {
@@ -89,7 +128,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["boho", "floral", "wrap"],
     rating: 4.5,
     reviews: 203,
-    img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&q=80",
+    img: garment_5,
     liked: false,
     isNew: true,
   },
@@ -104,7 +143,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["office", "formal", "blazer"],
     rating: 4.8,
     reviews: 156,
-    img: "https://images.unsplash.com/photo-1594938298603-c8148c4b5d1e?w=400&q=80",
+    img: garment_7,
     liked: true,
     isTrending: true,
   },
@@ -119,7 +158,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["sport", "yoga", "activewear"],
     rating: 4.9,
     reviews: 521,
-    img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80",
+    img: garment_30,
     liked: false,
   },
   {
@@ -133,7 +172,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["denim", "casual", "wide-leg"],
     rating: 4.6,
     reviews: 378,
-    img: "https://images.unsplash.com/photo-1541840031508-326005e7ca7a?w=400&q=80",
+    img: garment_28,
     liked: false,
     isNew: true,
   },
@@ -148,7 +187,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["silk", "elegant", "party"],
     rating: 4.7,
     reviews: 134,
-    img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&q=80",
+    img: garment_25,
     liked: true,
     isTrending: true,
   },
@@ -163,7 +202,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["leather", "biker", "edgy"],
     rating: 4.8,
     reviews: 267,
-    img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&q=80",
+    img: garment_14,
     liked: false,
   },
   {
@@ -177,7 +216,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["crop", "floral", "summer"],
     rating: 4.4,
     reviews: 89,
-    img: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=400&q=80",
+    img: garment_21,
     liked: false,
     isNew: true,
   },
@@ -192,7 +231,7 @@ export const OUTFITS: Outfit[] = [
     tags: ["trench", "classic", "luxury"],
     rating: 4.9,
     reviews: 445,
-    img: "https://images.unsplash.com/photo-1548624313-0396c75e4b1a?w=400&q=80",
+    img: garment_13,
     liked: true,
     isTrending: true,
   },
@@ -201,9 +240,9 @@ export const OUTFITS: Outfit[] = [
 export const CATEGORIES = ["All", "Dresses", "Tops", "Bottoms", "Outerwear", "Formal", "Casual", "Streetwear", "Athleisure"] as const;
 
 // Sample model photos for the try-on upload step
-export const SAMPLE_MODELS = [
-  { id: 1, img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80", label: "Sample 1" },
-  { id: 2, img: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=400&q=80", label: "Sample 2" },
-  { id: 3, img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80", label: "Sample 3" },
-  { id: 4, img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80", label: "Sample 4" },
-];
+// export const SAMPLE_MODELS = [
+//   { id: 1, img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80", label: "Sample 1" },
+//   { id: 2, img: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=400&q=80", label: "Sample 2" },
+//   { id: 3, img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80", label: "Sample 3" },
+//   { id: 4, img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80", label: "Sample 4" },
+// ];
