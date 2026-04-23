@@ -7,7 +7,6 @@ import time
 from werkzeug.utils import secure_filename
 client = Client("yisol/IDM-VTON")
 
-#client = Client("yisol/IDM-VTON", hf_token="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")
 
 app = Flask(__name__, static_folder="static")
 CORS(app)

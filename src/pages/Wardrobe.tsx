@@ -4,23 +4,66 @@ import AppNavbar from "../components/AppNavbar";
 import { useNavigate } from "react-router-dom";
 import { Plus, Shirt, Search, Trash2, Heart, Zap, LayoutGrid, List } from "lucide-react";
 
+import garment_5 from "../assets/outfits/garment_5.png";
+import garment_7 from "../assets/outfits/garment_7.png";
+import garment_8 from "../assets/outfits/garment_8.png";
+import garment_13 from "../assets/outfits/garment_13.png";
+import garment_14 from "../assets/outfits/garment_14.png";
+import garment_15 from "../assets/outfits/garment_15.png";
+import garment_17 from "../assets/outfits/garment_17.png";
+import garment_21 from "../assets/outfits/garment_21.png";
+import garment_23 from "../assets/outfits/garment_23.png";
+import garment_24 from "../assets/outfits/garment_24.png";
+import garment_25 from "../assets/outfits/garment_25.png";
+import garment_26 from "../assets/outfits/garment_26.png";
+import garment_27 from "../assets/outfits/garment_27.png";
+import garment_28 from "../assets/outfits/garment_28.png";
+import garment_29 from "../assets/outfits/garment_29.png";
+import garment_30 from "../assets/outfits/garment_30.png";
 
-const outfit1 = "/src/assets/images/outfit1.jpg";
-const outfit2 = "/src/assets/images/outfit2.jpg";
+const CATEGORIES = ["All", "Tops", "Dresses", "Outerwear"];
 
-const CATEGORIES = ["All", "Tops", "Bottoms", "Dresses", "Outerwear", "Shoes", "Accessories"];
 const COLORS = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#a855f7", "#ec4899", "#ffffff", "#000000"];
+const ALL_IMAGES = [
+
+  garment_5, garment_7, garment_8, garment_13,
+  garment_14, garment_15, garment_17, garment_21,
+  garment_23, garment_24, garment_25, garment_26,
+  garment_27, garment_28, garment_29, garment_30
+];
 
 const INITIAL_ITEMS = [
-  { id: 1, img: outfit1, name: "Floral Midi Dress", category: "Dresses", color: "#ec4899", brand: "Zara", worn: 3, liked: true },
-  { id: 2, img: outfit2, name: "White Linen Set", category: "Tops", color: "#ffffff", brand: "H&M", worn: 7, liked: false },
-  { id: 3, img: outfit1, name: "Evening Gown", category: "Dresses", color: "#a855f7", brand: "Mango", worn: 1, liked: true },
-  { id: 4, img: outfit2, name: "Street Casual", category: "Tops", color: "#3b82f6", brand: "Nike", worn: 12, liked: false },
+  
+  { id: 5, img: garment_5, name: "Slim Fit Denim Jacket", category: "Outerwear", color: "#000000", brand: "Levi's", worn: 5, liked: true },
+  { id: 6, img: garment_7, name: "High-Waist Straight Jeans", category: "Bottoms", color: "#3b82f6", brand: "Wrangler", worn: 6, liked: false },
+  { id: 7, img: garment_8, name: "Printed Summer Maxi Dress", category: "Dresses", color: "#f97316", brand: "Forever 21", worn: 2, liked: true },
+  { id: 8, img: garment_13, name: "Oversized Wool Blend Coat", category: "Outerwear", color: "#000000", brand: "Zara", worn: 4, liked: false },
+
+  { id: 9, img: garment_14, name: "Casual Graphic T-Shirt", category: "Tops", color: "#22c55e", brand: "H&M", worn: 9, liked: true },
+  { id: 10, img: garment_15, name: "Pleated A-Line Skirt", category: "Bottoms", color: "#ec4899", brand: "Mango", worn: 3, liked: false },
+  { id: 11, img: garment_17, name: "Crop Fit Hoodie", category: "Tops", color: "#a855f7", brand: "Puma", worn: 4, liked: true },
+  { id: 12, img: garment_21, name: "Formal Slim Fit Blazer", category: "Outerwear", color: "#000000", brand: "Zara", worn: 2, liked: false },
+
+  { id: 13, img: garment_23, name: "Boho Printed Kurti", category: "Dresses", color: "#f97316", brand: "Biba", worn: 6, liked: true },
+  { id: 14, img: garment_24, name: "Ethnic Anarkali Dress", category: "Dresses", color: "#ec4899", brand: "Libas", worn: 3, liked: true },
+  { id: 15, img: garment_25, name: "Classic Black Heels", category: "Shoes", color: "#000000", brand: "Aldo", worn: 8, liked: false },
+  { id: 16, img: garment_26, name: "Sport Running Sneakers", category: "Shoes", color: "#3b82f6", brand: "Nike", worn: 10, liked: true },
+
+  { id: 17, img: garment_27, name: "Leather Crossbody Bag", category: "Accessories", color: "#000000", brand: "Guess", worn: 5, liked: true },
+  { id: 18, img: garment_28, name: "Minimal Gold Necklace", category: "Accessories", color: "#eab308", brand: "Tanishq", worn: 7, liked: false },
+  { id: 19, img: garment_29, name: "Casual Cotton Shorts", category: "Bottoms", color: "#22c55e", brand: "H&M", worn: 6, liked: true },
+  { id: 20, img: garment_30, name: "Oversized Graphic Sweatshirt", category: "Tops", color: "#a855f7", brand: "Zara", worn: 4, liked: false },
 ];
 
 interface WardrobeItem {
-  id: number; img: string; name: string; category: string;
-  color: string; brand: string; worn: number; liked: boolean;
+  id: number;
+  img: string;
+  name: string;
+  category: string;
+  color: string;
+  brand: string;
+  worn: number;
+  liked: boolean;
 }
 
 function ItemCard({ item, onDelete, onLike, onTryOn }: {
@@ -142,11 +185,22 @@ export default function Wardrobe() {
     return matchCat && matchSearch && matchLiked;
   });
 
-  const addItem = (partial: Partial<WardrobeItem>) => {
-    const newItem: WardrobeItem = { id: Date.now(), img: outfit1, name: partial.name!, category: partial.category!, color: partial.color!, brand: partial.brand ?? "", worn: 0, liked: false };
-    setItems(prev => [newItem, ...prev]);
+ const addItem = (partial: Partial<WardrobeItem>) => {
+  const randomImg = ALL_IMAGES[Math.floor(Math.random() * ALL_IMAGES.length)];
+
+  const newItem: WardrobeItem = {
+    id: Date.now(),
+    img: randomImg,   // ✅ FIXED
+    name: partial.name!,
+    category: partial.category!,
+    color: partial.color!,
+    brand: partial.brand ?? "",
+    worn: 0,
+    liked: false
   };
 
+  setItems(prev => [newItem, ...prev]);
+};
   const stats = [
     { label: "Total Items", value: items.length },
     { label: "Categories", value: [...new Set(items.map(i => i.category))].length },
@@ -235,7 +289,7 @@ export default function Wardrobe() {
                   <ItemCard item={item}
                     onDelete={id => setItems(prev => prev.filter(i => i.id !== id))}
                     onLike={id => setItems(prev => prev.map(i => i.id === id ? { ...i, liked: !i.liked } : i))}
-                    onTryOn={() => navigate("/tryon")} />
+                    onTryOn={(item) => navigate("/tryon", { state: item })} />
                 </motion.div>
               ))}
               {/* Add card */}
